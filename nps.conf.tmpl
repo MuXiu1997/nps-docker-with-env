@@ -1,0 +1,93 @@
+{{- define "prop" }}
+  {{- $key := index . 0 }}
+  {{- $default := index . 1 }}
+  {{- $envKey := printf "NPS_%s" (upper $key) }}
+  {{- $commentEnvKey := printf "COMMENT_NPS_%s" (upper $key) }}
+  {{- if eq (env $commentEnvKey) "true" }}#{{ end }}{{ $key }}={{ env $envKey | default $default }}
+{{- end -}}
+
+{{ template "prop" (list "appname" "nps") }}
+#Boot mode(dev|pro)
+{{ template "prop" (list "runmode" "dev") }}
+
+#HTTP(S) proxy port, no startup if empty
+{{ template "prop" (list "http_proxy_ip" "0.0.0.0") }}
+{{ template "prop" (list "http_proxy_port" "80") }}
+{{ template "prop" (list "https_proxy_port" "443") }}
+{{ template "prop" (list "https_just_proxy" "true") }}
+#default https certificate setting
+{{ template "prop" (list "https_default_cert_file" "conf/server.pem") }}
+{{ template "prop" (list "https_default_key_file" "conf/server.key") }}
+
+##bridge
+{{ template "prop" (list "bridge_type" "tcp") }}
+{{ template "prop" (list "bridge_port" "8024") }}
+{{ template "prop" (list "bridge_ip" "0.0.0.0") }}
+
+# Public password, which clients can use to connect to the server
+# After the connection, the server will be able to open relevant ports and parse related domain names according to its own configuration file.
+{{ template "prop" (list "public_vkey" "123") }}
+
+#Traffic data persistence interval(minute)
+#Ignorance means no persistence
+{{ template "prop" (list "flow_store_interval" "1") }}
+
+# log level LevelEmergency->0  LevelAlert->1 LevelCritical->2 LevelError->3 LevelWarning->4 LevelNotice->5 LevelInformational->6 LevelDebug->7
+{{ template "prop" (list "log_level" "7") }}
+{{ template "prop" (list "log_path" "nps.log") }}
+
+#Whether to restrict IP access, true or false or ignore
+{{ template "prop" (list "ip_limit" "true") }}
+
+#p2p
+{{ template "prop" (list "p2p_ip" "127.0.0.1") }}
+{{ template "prop" (list "p2p_port" "6000") }}
+
+#web
+{{ template "prop" (list "web_host" "a.o.com") }}
+{{ template "prop" (list "web_username" "admin") }}
+{{ template "prop" (list "web_password" "123") }}
+{{ template "prop" (list "web_port" "8080") }}
+{{ template "prop" (list "web_ip" "0.0.0.0") }}
+{{ template "prop" (list "web_base_url" "") }}
+{{ template "prop" (list "web_open_ssl" "false") }}
+{{ template "prop" (list "web_cert_file" "conf/server.pem") }}
+{{ template "prop" (list "web_key_file" "conf/server.key") }}
+# if web under proxy use sub path. like http://host/nps need this.
+#web_base_url=/nps
+
+#Web API unauthenticated IP address(the len of auth_crypt_key must be 16)
+#Remove comments if needed
+{{ template "prop" (list "auth_key" "test") }}
+{{ template "prop" (list "auth_crypt_key" "1234567812345678") }}
+
+{{ template "prop" (list "allow_ports" "9001-9009,10001,11000-12000") }}
+
+#Web management multi-user login
+{{ template "prop" (list "allow_user_login" "false") }}
+{{ template "prop" (list "allow_user_register" "false") }}
+{{ template "prop" (list "allow_user_change_username" "false") }}
+
+
+#extension
+{{ template "prop" (list "allow_flow_limit" "false") }}
+{{ template "prop" (list "allow_rate_limit" "false") }}
+{{ template "prop" (list "allow_tunnel_num_limit" "false") }}
+{{ template "prop" (list "allow_local_proxy" "false") }}
+{{ template "prop" (list "allow_connection_num_limit" "false") }}
+{{ template "prop" (list "allow_multi_ip" "false") }}
+{{ template "prop" (list "system_info_display" "false") }}
+
+#cache
+{{ template "prop" (list "http_cache" "false") }}
+{{ template "prop" (list "http_cache_length" "100") }}
+
+#get origin ip
+{{ template "prop" (list "http_add_origin_header" "false") }}
+
+#pprof debug options
+{{ template "prop" (list "pprof_ip" "0.0.0.0") }}
+{{ template "prop" (list "pprof_port" "9999") }}
+
+#client disconnect timeout
+{{ template "prop" (list "disconnect_timeout" "60") }}
